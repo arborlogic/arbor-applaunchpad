@@ -21,7 +21,7 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
   const [screenshotSrc, setScreenshotSrc] = useState(initialScreenshotSrc);
   
   // Vibe Check Controls
-  const [padding, setPadding] = useState(8);
+  const [padding, setPadding] = useState(10);
   const [borderRadius, setBorderRadius] = useState(32);
   const [containerWidth, setContainerWidth] = useState(308);
   
@@ -31,6 +31,8 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
   const [mockupOffsetY, setMockupOffsetY] = useState(0);
   const [mockupWidthScale, setMockupWidthScale] = useState(1.0);
   const [mockupHeightScale, setMockupHeightScale] = useState(1.0);
+  const [phoneBodyColor, setPhoneBodyColor] = useState('#ffffff');
+  const [phoneBodyOpacity, setPhoneBodyOpacity] = useState(100);
 
   const [containerKey, setContainerKey] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -107,12 +109,20 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
         // 清除畫布（透明背景）
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 繪製白色圓角矩形作為手機本體
+        // 繪製手機本體（可調顏色和透明度）
         ctx.save();
         ctx.beginPath();
         const outerRadius = 40 * scale;
         ctx.roundRect(0, 0, canvas.width, canvas.height, outerRadius);
-        ctx.fillStyle = '#ffffff';
+        
+        // 轉換十六進制顏色為 RGB
+        const hex = phoneBodyColor.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const alpha = phoneBodyOpacity / 100;
+        
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
         ctx.fill();
         ctx.restore();
 
@@ -207,7 +217,7 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
       setIsDownloading(false);
       setTimeout(() => setDownloadStatus(''), 5000);
     }
-  }, [mockupSrc, screenshotSrc, containerWidth, padding, borderRadius, mockupWidthScale, mockupHeightScale, mockupOffsetX, mockupOffsetY]);
+  }, [mockupSrc, screenshotSrc, containerWidth, padding, borderRadius, mockupWidthScale, mockupHeightScale, mockupOffsetX, mockupOffsetY, phoneBodyColor, phoneBodyOpacity]);
 
   const onScreenshotDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -356,6 +366,52 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
             </div>
           </div>
 
+          {/* 手機背景顏色控制 - 始終顯示 */}
+          <div className="space-y-4 p-6 text-gray-900 bg-white rounded-lg shadow-sm border border-gray-200">
+            <h3 className="font-semibold text-lg mb-4">手機背景</h3>
+            
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>背景顏色</Label>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <input
+                    type="color"
+                    value={phoneBodyColor}
+                    onChange={(e) => setPhoneBodyColor(e.target.value)}
+                    className="w-12 h-10 rounded cursor-pointer border border-gray-300"
+                  />
+                  <div className="flex-1 flex gap-2 flex-wrap">
+                    {['#ffffff', '#000000', '#f5f5f5', '#e0e0e0', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'].map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setPhoneBodyColor(color)}
+                        className={`w-8 h-8 rounded border-2 transition-all ${phoneBodyColor === color ? 'border-black' : 'border-gray-300'}`}
+                        style={{ backgroundColor: color }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>透明度</Label>
+                  <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{phoneBodyOpacity}%</span>
+                </div>
+                <Slider
+                  value={[phoneBodyOpacity]}
+                  onValueChange={(val) => setPhoneBodyOpacity(val[0])}
+                  min={0}
+                  max={100}
+                  step={5}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Mockup Controls - 手機外框調整 */}
           {mockupSrc && (
             <div className="space-y-4 p-6 text-gray-900 bg-white rounded-lg shadow-sm border border-gray-200">
@@ -442,11 +498,12 @@ const ImageMerger: React.FC<ImageMergerProps> = ({
           <div
             ref={mergeContainerRef}
             key={containerKey}
-            className="relative bg-white rounded-[40px] shadow-lg"
+            className="relative rounded-[40px] shadow-lg"
             style={{ 
               width: `${containerWidth}px`,
               overflow: 'hidden',
-              aspectRatio: '9/19.5'
+              aspectRatio: '9/19.5',
+              backgroundColor: `rgba(${parseInt(phoneBodyColor.substring(1, 3), 16)}, ${parseInt(phoneBodyColor.substring(3, 5), 16)}, ${parseInt(phoneBodyColor.substring(5, 7), 16)}, ${phoneBodyOpacity / 100})`
             }}
           >
             {/* 底層：應用截圖 */}
