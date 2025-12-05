@@ -1,0 +1,9 @@
+1:"$Sreact.fragment"
+2:I[47257,["/arbor-applaunchpad/_next/static/chunks/ff1a16fafef87110.js","/arbor-applaunchpad/_next/static/chunks/247eb132b7f7b574.js"],"ClientPageRoot"]
+3:I[58258,["/arbor-applaunchpad/_next/static/chunks/6172d1435170ae61.js","/arbor-applaunchpad/_next/static/chunks/ec1f2c5e911a8d7e.js","/arbor-applaunchpad/_next/static/chunks/e7b5f103db2d9eb4.js"],"default"]
+6:I[97367,["/arbor-applaunchpad/_next/static/chunks/ff1a16fafef87110.js","/arbor-applaunchpad/_next/static/chunks/247eb132b7f7b574.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+0:{"buildId":"9vpwvkKSJHKQDZM_pMCYM","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/arbor-applaunchpad/_next/static/chunks/e7b5f103db2d9eb4.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
+4:{}
+5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null
