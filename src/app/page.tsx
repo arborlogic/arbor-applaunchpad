@@ -1,7 +1,7 @@
 'use client'
 
-import ImageMerger from '@/components/ImageMerger'
+import HomePage from '@/components/HomePage'
 
 export default function Home() {
-  return <ImageMerger />
+  return <HomePage />
 }
